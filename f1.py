@@ -6,7 +6,7 @@ from keras.preprocessing import image
 import numpy as np 
 import os 
 import cv2 
-import pandas 
+
 import matplotlib.pyplot as plt
 import glob
 from keras.utils import np_utils
@@ -23,6 +23,8 @@ import os
 import numpy as np
 import cv2
 
+
+##### Histogram of Oriented Gradients Face Detector ########
 def detect_faces(image):
 
     # Create a face detector
@@ -47,6 +49,8 @@ images = []
 labels =[]
 
 c=0
+
+###### Function to load dataset #########
 def load_dataset(rootDir,c=0):   
     
     
@@ -80,11 +84,7 @@ def load_dataset(rootDir,c=0):
 
 
     
-            
-            
-		 
-  
-         
+ ######## Deep learning model using CNNs #######                   
          
 def make_network(X_train,classes):
     cnn = Sequential()
@@ -113,9 +113,13 @@ def make_network(X_train,classes):
 if __name__ == '__main__':
 
 
-    ###########AT&T Dataset#################
+    ###########Dataset#################
+    rootdir = 'Change it to the dataset directory'
     
-    images,labels, nb_classes = load_dataset('At&t',0)
+    images,labels, nb_classes = load_dataset(rootdir,0)
+
+	
+    ##### Split ######	
     X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.3, random_state=42)
     X_valid, X_test, y_valid, y_test = train_test_split(X_test, y_test, test_size=0.5, random_state=42)
     
@@ -140,9 +144,12 @@ if __name__ == '__main__':
     
     model = make_network(X_train,nb_classes)
     model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
+	
+	
     hist1 = model.fit(X_train, Y_train, batch_size=32, epochs=150, validation_data=(X_valid,Y_valid),
                            shuffle=True)
     score=model.evaluate(X_test, Y_test, verbose=0)
+	
     print("%s: %.2f%%" % (model.metrics_names[1], score[1] * 100)) 
     
     ###################################
